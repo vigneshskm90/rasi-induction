@@ -220,6 +220,36 @@ input{font:inherit}
 .welcome .small{font-size:12px;opacity:.6;margin-top:18px}
 .fall{position:absolute;top:-30px;font-size:20px;opacity:.5;animation:fall linear infinite}
 @keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+.node.exam .badge{background:var(--green);border-color:var(--green);color:#fff;font-size:20px}
+.node.exam.locked .badge{background:var(--card);border-color:var(--line);color:var(--muted)}
+.node.exam .mcard{background:linear-gradient(150deg,#FFF6E6,#FFFFFF);border-color:var(--saffron)}
+.node.exam.locked .mcard{background:var(--card);border-color:transparent;opacity:.7}
+.grades{display:grid;gap:8px;margin:12px 0}
+.grades div{display:flex;align-items:center;gap:12px;background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.grades .gi{font-size:26px}.grades b{display:block}.grades span{font-size:13px;color:var(--muted)}
+.grades .rg{margin-left:auto;font-weight:700;color:var(--green);font-size:14px;white-space:nowrap}
+.qprog{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:6px}
+.qbar{height:6px;border-radius:6px;background:var(--line);overflow:hidden;margin-bottom:16px}.qbar b{display:block;height:100%;background:var(--saffron);transition:width .3s}
+.title-card{background:linear-gradient(160deg,var(--green),var(--green-2));color:#fff;border-radius:22px;padding:26px 20px;text-align:center;margin-bottom:14px}
+.title-card .tb{font-size:64px;line-height:1}
+.title-card small{display:block;letter-spacing:.14em;text-transform:uppercase;font-size:12px;opacity:.8;margin-top:10px}
+.title-card h2{font-size:32px;margin:2px 0}
+.title-card .sc{display:inline-block;margin-top:10px;background:rgba(255,255,255,.15);padding:6px 16px;border-radius:30px;font-weight:700}
+.review{background:var(--card);border-radius:14px;padding:12px 14px;margin-bottom:9px;box-shadow:var(--shadow);font-size:14px}
+.review b{display:block;margin-bottom:4px}
+.review .yr{color:var(--bad)}.review .ca{color:var(--good);font-weight:600}
+.opt{display:block;width:100%;text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:10px;font-size:15.5px}
+.opt.sel{border-color:var(--green);background:var(--mint)}
+.opt.right{border-color:var(--good);background:#E3F3EA}
+.opt.wrong{border-color:var(--bad);background:#FBE9E7}
+.explain{font-size:14px;padding:12px 14px;border-radius:12px;background:var(--mint);margin-top:4px}
+.cta:disabled{opacity:.45}
+.guruji{display:flex;gap:10px;align-items:flex-end;margin:4px 0 14px}
+.guruji .ga{width:52px;height:52px;border-radius:50%;background:var(--saffron-soft);display:grid;place-items:center;font-size:30px;flex:none;animation:bob 2.4s ease-in-out infinite}
+.guruji .gb{position:relative;background:var(--card);border:1.5px solid var(--saffron);border-radius:18px 18px 18px 4px;padding:12px 14px;font-size:15px;box-shadow:var(--shadow)}
+.guruji .gb small{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--saffron);margin-bottom:2px}
+@keyframes bob{50%{transform:translateY(-4px)}}
+.nudge{margin-top:8px;font-size:12.5px;font-weight:600;color:#9A5A0C;background:var(--saffron-soft);border-radius:10px;padding:6px 10px}
 .fade{animation:fade .25s ease}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 </style>
@@ -390,10 +420,67 @@ const SECTIONS = [
   ]}
 ];
 
+/* TITLES — earned from the Gurukul Pariksha score (best attempt) */
 const LEVELS = [
- {name:"Shishya", min:0, sub:"The learner. Your journey begins."},
- {name:"Sadhak",  min:3, sub:"The practitioner. Keep going."},
- {name:"Acharya", min:SECTIONS.length, sub:"The master. You know the Rasi way."}
+ {name:"Shishya", min:0,   icon:"🌱", range:"Below 80%", sub:"The learner. Keep growing!"},
+ {name:"Sadhak",  min:80,  icon:"🌿", range:"80 – 99%",  sub:"The practitioner. Almost there!"},
+ {name:"Acharya", min:100, icon:"🏆", range:"100%",      sub:"The master. You know the Rasi way."}
+];
+
+/* GURUJI'S COMMENTS — a random one is shown on the result screen */
+const GURUJI = {
+ oneAway:[   // Sadhak with exactly one wrong answer
+  "Just ONE wrong answer! 😱 That question is going to haunt your dreams tonight. 👻",
+  "One mistake away from Acharya! So close, even the seeds are crying. 🌽😢",
+  "99 problems… well, just 1 actually. Fix it and the Acharya chair is yours! 🪑"],
+ Sadhak:[
+  "So close! You're like a hybrid at 95 days: just a little more sunshine needed. ☀️",
+  "Almost Acharya! Even the best seeds need one more watering. 💧",
+  "Sadhak unlocked! 🔓 The Acharya chair is warm… but not yet yours. 🪑",
+  "Good harvest, but not a bumper crop yet. One more season… er, attempt! 🌾",
+  "Guruji is impressed. Not fully impressed, but impressed. 😌 Try again!"],
+ Shishya:[
+  "Don't worry, even our best hybrids started as tiny seeds. 🌱 Back to the field!",
+  "Your knowledge is still germinating. Add some water (revision) and retake! 💧",
+  "Looks like a pest attacked your memory. 🐛 One spray of revision, then retake!",
+  "Guruji is not angry… just a little disappointed. 🧘 Try again!",
+  "Rabi, Kharif, Summer… right now your most important season is RETAKE. 😄"],
+ veryLow:[   // below 50%
+  "Hmm… did a goat eat your notes? 🐐 Revise the journey and come back!",
+  "Guruji has seen better scores on a rainy Monday. ☔ Back to Adhyay 1, champ!",
+  "Even the scarecrow scored higher. 🧑‍🌾 But the scarecrow can't retake, and you can!"],
+ Acharya:[
+  "Bow down, everyone! 🙏 A new Acharya has arrived.",
+  "100%! Guruji is wiping happy tears. 🥲 You truly know the Rasi way.",
+  "Perfect score! Even Guruji had to check the answer key twice. 😎"]
+};
+const NUDGE={Shishya:"🌱 Your seed of knowledge needs more water. Retake!",Sadhak:"📞 The Acharya title is calling… pick up! Retake!"};
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+function gurujiLine(pct,wrong){
+ const lv=levelFor(pct).name;
+ if(lv==="Sadhak"&&wrong===1)return pick(GURUJI.oneAway);
+ if(pct<50)return pick(GURUJI.veryLow);
+ return pick(GURUJI[lv]);
+}
+
+/* GURUKUL PARIKSHA — final test after the journey.
+   a = index of the correct option (0 = first). Questions and options are shuffled each attempt. */
+const EXAM = [
+ {q:"In which year was Rasi Seeds founded?", o:["1973","1983","1965","1991"], a:0},
+ {q:"Where was Rasi Seeds founded?", o:["Attur, Tamil Nadu","Coimbatore, Tamil Nadu","Hyderabad, Telangana","Pune, Maharashtra"], a:0},
+ {q:"Who founded Rasi Seeds?", o:["Dr. M. Ramasami","Dr. M. S. Swaminathan","Dr. Norman Borlaug","Dr. Verghese Kurien"], a:0},
+ {q:"Rasi is India's largest brand of which seed?", o:["Cotton","Maize","Paddy","Wheat"], a:0},
+ {q:"What are Rasi's three verticals?", o:["Cotton, FC – Field Crops, Forage","Cotton, Vegetables, Fruits","Maize, Paddy, Wheat","Seeds, Fertilisers, Pesticides"], a:0},
+ {q:"Rasi's forage business runs under which brand?", o:["Sira Seeds","Rasi Mitra","Rasi Connect","Attur Seeds"], a:0},
+ {q:"Rasi Mitra is a loyalty program for…", o:["Farmers","Retailers & distributors","Employees","Seed producers"], a:0},
+ {q:"Rasi Connect is a loyalty program for…", o:["Retailers & distributors","Farmers","Employees","Transporters"], a:0},
+ {q:"What is the correct order of Rasi's sales structure?", o:["Division › Region › Territory › ESO HQ","Region › Division › ESO HQ › Territory","Territory › Region › Division › ESO HQ","ESO HQ › Division › Territory › Region"], a:0},
+ {q:"Where is Rasi's NABL-accredited research lab?", o:["Attur","Bengaluru","Hyderabad","Delhi"], a:0},
+ {q:"About how many breeders & scientists work at Rasi?", o:["250+","50+","1,000+","25+"], a:0},
+ {q:"\"Every decision at Rasi is evaluated through the lens of farmer prosperity.\" Which value is this?", o:["Farmer First","Ethical Governance","Nurturing Excellence","Reliability & Trust"], a:0},
+ {q:"\"Innovation at Rasi is practical, research-driven and field-proven.\" Which value is this?", o:["Innovation Led","Farmer First","Nurturing Excellence","Ethical Governance"], a:0},
+ {q:"Which value says \"Trust is earned through performance\"?", o:["Reliability & Trust","Ethical Governance","Farmer First","Innovation Led"], a:0},
+ {q:"FY 2024-25 is made up of which seasons?", o:["Rabi 2024 + Summer 2025 + Kharif 2025","Kharif 2024 + Rabi 2024 + Summer 2025","Rabi 2025 + Summer 2025 + Kharif 2025","Summer 2024 + Kharif 2024 + Rabi 2025"], a:0}
 ];
 
 /* ================= STATE ================= */
@@ -408,7 +495,9 @@ const tKey=(s,i)=>s.id+":"+i;
 const secRead=s=>s.topics.filter((_,i)=>G.read[tKey(s,i)]).length;
 const secDone=s=>secRead(s)===s.topics.length;
 const doneCount=()=>SECTIONS.filter(secDone).length;
-const curLevel=()=>{let l=LEVELS[0];LEVELS.forEach(x=>{if(doneCount()>=x.min)l=x});return l};
+const levelFor=pct=>{let l=LEVELS[0];LEVELS.forEach(x=>{if(pct>=x.min)l=x});return l};
+const curLevel=()=>G.exam&&G.exam.best!=null?levelFor(G.exam.best):null;
+const journeyDone=()=>doneCount()===SECTIONS.length;
 const nextIdx=()=>{const i=SECTIONS.findIndex(s=>!secDone(s));return i<0?SECTIONS.length:i};
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
@@ -475,8 +564,8 @@ function showHome(){setNav("home");
     <svg class="ring" viewBox="0 0 64 64"><circle class="bg" cx="32" cy="32" r="26"/>
      <circle class="fg" cx="32" cy="32" r="26" stroke-dasharray="${C}" stroke-dashoffset="${off}" transform="rotate(-90 32 32)"/>
      <text x="32" y="37" text-anchor="middle">${pct}%</text></svg>
-    <div><div class="level-name serif">${lv.name}</div>
-     <div class="level-sub">${n} of ${tot} sections complete · ${lv.sub}</div>
+    <div><div class="level-name serif">${lv?lv.icon+" "+lv.name:"Title not yet earned"}</div>
+     <div class="level-sub">${n} of ${tot} sections complete · ${lv?`Best Pariksha score ${G.exam.best}%`:"Finish the journey and take the Pariksha"}</div>
      <div class="levels">${LEVELS.map(x=>`<span class="${x===lv?'on':''}">${x.name}</span>`).join("")}</div></div>
    </div>
   </div>
@@ -491,6 +580,7 @@ function showHome(){setNav("home");
        <div class="k">Adhyay ${i+1}</div><h3>${s.icon} ${s.title}</h3><p>${s.sub}</p>
        <div class="meta"><span>${r}/${t} read</span><div class="mini"><b style="width:${r/t*100}%"></b></div>${tag}</div>
       </button></div>`}).join("")}
+   ${examNode()}
   </div>
   <div class="foot">Rasi Gurukul · Learn · Practise · Grow<br><button onclick="resetAll()">Reset progress</button></div>
  </div>`;
@@ -551,18 +641,19 @@ function showTopic(k){setNav("home");
 function finishSection(){
  const s=SECTIONS[SI];
  if(!secDone(s))return showSection(SI);
- const lv=curLevel(),last=doneCount()===SECTIONS.length;
+ const last=journeyDone();
  appEl.innerHTML=`${bar("Complete",`${s.icon} ${s.title}`,"showHome()")}
  <div class="panel fade" style="text-align:center;padding-top:40px">
   <div style="font-size:64px">${last?"🏆":"🌟"}</div>
-  <h2 class="serif" style="font-size:26px;margin:10px 0 6px">${last?`You are now an ${lv.name}!`:"Adhyay complete!"}</h2>
-  <p style="color:var(--muted)">${last?"You've completed the whole Rasi Gurukul journey. Welcome aboard.":`Level: ${lv.name}. On to the next section.`}</p>
+  <h2 class="serif" style="font-size:26px;margin:10px 0 6px">${last?"Journey complete!":"Adhyay complete!"}</h2>
+  <p style="color:var(--muted)">${last?"You've finished every section. Now take the <b>Gurukul Pariksha</b> to earn your title.":"On to the next section."}</p>
+  ${last?`<button class="cta" onclick="showExamIntro()">📝 Take the Gurukul Pariksha</button>`:""}
   ${!last&&nextIdx()<SECTIONS.length?`<button class="cta" onclick="showSection(${nextIdx()})">Next: ${SECTIONS[nextIdx()].title}</button>`:""}
   <button class="cta alt" onclick="showHome()">Back to journey</button>
  </div>`;
  window.scrollTo(0,0);
 }
-function resetAll(){if(confirm("Reset learning progress on this device? Farmer contacts are kept.")){G.read={};saveState();showHome()}}
+function resetAll(){if(confirm("Reset learning progress and Pariksha scores on this device? Farmer contacts are kept.")){G.read={};G.exam=null;saveState();showHome()}}
 
 /* ================= NAV & TOOLKIT ================= */
 let timerId=null;
@@ -763,6 +854,94 @@ function exportFarmers(){
  const csv=rows.map(r=>r.map(c=>`"${String(c||"").replace(/"/g,'""')}"`).join(",")).join("\n");
  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["﻿"+csv],{type:"text/csv"}));
  a.download=`Farmer_Contacts_${new Date().toISOString().slice(0,10)}.csv`;document.body.appendChild(a);a.click();a.remove();
+}
+
+/* ================= GURUKUL PARIKSHA ================= */
+function examNode(){
+ const open=journeyDone(),ex=G.exam,lv=curLevel();
+ return `<div class="node exam ${open?"":"locked"}">
+  <div class="rail"><div class="badge">${open?"📝":"🔒"}</div></div>
+  <button class="mcard" onclick="${open?"showExamIntro()":"examLocked(this)"}">
+   <div class="k">Final Test</div><h3>📝 Gurukul Pariksha</h3>
+   <p>${open?`${EXAM.length} questions · Earn your title`:"Unlocks when all sections are complete"}</p>
+   <div class="meta">${ex&&ex.best!=null?`<span class="pill">${lv.icon} ${lv.name} · Best ${ex.best}%</span><span>${ex.attempts} attempt${ex.attempts>1?"s":""}</span>`+(NUDGE[lv.name]?`</div><div class="nudge">${NUDGE[lv.name]}`:""):open?`<span class="pill s">Ready</span>`:`<span>${doneCount()}/${SECTIONS.length} sections done</span>`}</div>
+  </button></div>`;
+}
+function examLocked(btn){
+ const p=btn.querySelector("p");
+ p.textContent=`Complete all ${SECTIONS.length} sections first. ${SECTIONS.length-doneCount()} to go!`;p.style.color="var(--bad)";
+}
+function gradesHTML(){return `<div class="grades">${LEVELS.slice().reverse().map(l=>`<div><span class="gi">${l.icon}</span><div><b>${l.name}</b><span>${l.sub}</span></div><span class="rg">${l.range}</span></div>`).join("")}</div>`}
+function showExamIntro(){
+ if(!journeyDone())return showHome();
+ setNav("home");const ex=G.exam;
+ appEl.innerHTML=`${bar("Final test","📝 Gurukul Pariksha","showHome()")}
+ <div class="panel fade"><div class="lesson">
+  <div class="icon">📝</div><h2 class="serif">Ready for your Pariksha?</h2>
+  <p><b>${EXAM.length} questions</b> on everything you learned in the journey. Your score decides your title:</p>
+  ${gradesHTML()}
+  <div class="tip">💡 You can retake the test any time. Your <b>best score</b> sets your title.</div>
+  ${ex&&ex.best!=null?`<p style="margin-top:10px;font-size:14px;color:var(--muted)">Best: <b>${ex.best}%</b> · Last: <b>${ex.last}%</b> · Attempts: <b>${ex.attempts}</b></p>`:""}
+ </div>
+ <button class="cta" onclick="startExam()">${ex&&ex.attempts?"🔁 Retake the test":"Start the Pariksha"}</button>
+ <button class="cta alt" onclick="showHome()">Not now</button></div>`;
+ window.scrollTo(0,0);
+}
+let EX=null;
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+function startExam(){
+ EX={qs:shuffle(EXAM).map(q=>{const order=shuffle(q.o.map((_,k)=>k));return {q:q.q,o:order.map(k=>q.o[k]),a:order.indexOf(q.a)}}),i:0,right:0,wrong:[],picked:null,locked:false};
+ examQ();
+}
+function examQ(){
+ setNav("home");const n=EX.qs.length,Q=EX.qs[EX.i];EX.picked=null;EX.locked=false;
+ appEl.innerHTML=`${bar(`Question ${EX.i+1} of ${n}`,"📝 Gurukul Pariksha","confirmQuit()")}
+ <div class="panel fade">
+  <div class="qprog"><span>Question ${EX.i+1} / ${n}</span><span>✓ ${EX.right} correct</span></div>
+  <div class="qbar"><b style="width:${EX.i/n*100}%"></b></div>
+  <div class="q serif" style="font-size:19px;font-weight:600;margin:4px 0 14px">${esc(Q.q)}</div>
+  ${Q.o.map((o,k)=>`<button class="opt" data-k="${k}" onclick="examPick(${k})">${esc(o)}</button>`).join("")}
+  <div id="exfb"></div>
+  <button class="cta" id="exgo" disabled onclick="examNext()">Check answer</button>
+ </div>`;
+ window.scrollTo(0,0);
+}
+function examPick(k){if(EX.locked)return;EX.picked=k;document.querySelectorAll(".opt").forEach(b=>b.classList.toggle("sel",+b.dataset.k===k));document.getElementById("exgo").disabled=false}
+function examNext(){
+ const Q=EX.qs[EX.i],go=document.getElementById("exgo");
+ if(!EX.locked){
+  EX.locked=true;const ok=EX.picked===Q.a;
+  if(ok)EX.right++;else EX.wrong.push({q:Q.q,yours:Q.o[EX.picked],ans:Q.o[Q.a]});
+  document.querySelectorAll(".opt").forEach(b=>{const k=+b.dataset.k;b.classList.remove("sel");if(k===Q.a)b.classList.add("right");else if(k===EX.picked)b.classList.add("wrong")});
+  document.getElementById("exfb").innerHTML=`<div class="explain fade">${ok?"✅ <b>Correct!</b>":`❌ <b>Not quite.</b> The answer is: <b>${esc(Q.o[Q.a])}</b>`}</div>`;
+  go.textContent=EX.i<EX.qs.length-1?"Next question":"See my result";
+ } else if(EX.i<EX.qs.length-1){EX.i++;examQ()} else examResult();
+}
+function confirmQuit(){
+ const b=document.querySelector(".topbar .back");
+ if(b.dataset.arm){EX=null;return showHome()}
+ b.dataset.arm="1";b.textContent="✕";
+ const t=document.querySelector(".topbar .t small");t.textContent="Tap ✕ again to quit (progress lost)";t.style.color="var(--bad)";
+}
+function examResult(){
+ const n=EX.qs.length,pct=Math.round(EX.right/n*100),lv=levelFor(pct);
+ const prev=G.exam||{best:null,last:null,attempts:0};
+ const newBest=prev.best==null||pct>prev.best;
+ G.exam={best:newBest?pct:prev.best,last:pct,attempts:prev.attempts+1,date:new Date().toISOString().slice(0,10)};saveState();
+ const nextL=LEVELS.find(l=>l.min>pct);
+ appEl.innerHTML=`${bar("Result","📝 Gurukul Pariksha","showHome()")}
+ <div class="panel fade">
+  <div class="title-card"><div class="tb">${lv.icon}</div><small>Your title</small><h2 class="serif">${lv.name}</h2>
+   <div style="opacity:.9">${lv.sub}</div><div class="sc">${EX.right} / ${n} correct · ${pct}%</div></div>
+  <div class="guruji"><div class="ga">🧘</div><div class="gb"><small>Guruji says</small>${gurujiLine(pct,EX.wrong.length)}</div></div>
+  ${newBest&&prev.best!=null?`<div class="tip">🎉 New best score! (previous best ${prev.best}%)</div>`:""}
+  ${!newBest?`<div class="tip">Your best score is still <b>${prev.best}%</b> (${levelFor(prev.best).name}), so your title stays.</div>`:""}
+  ${nextL?`<p class="intro" style="text-align:center">Score <b>${nextL.min}%</b> to become <b>${nextL.name}</b>. Retake the test any time!</p>`:`<p class="intro" style="text-align:center">Perfect score! 🙏 You know the Rasi way.</p>`}
+  ${EX.wrong.length?`<div class="section-title" style="margin:16px 2px 8px">Review your mistakes</div>${EX.wrong.map(w=>`<div class="review"><b>${esc(w.q)}</b><span class="yr">Your answer: ${esc(w.yours)}</span><br><span class="ca">Correct: ${esc(w.ans)}</span></div>`).join("")}`:""}
+  <button class="cta" onclick="startExam()">🔁 Retake the test</button>
+  <button class="cta alt" onclick="showHome()">Back to journey</button>
+ </div>`;
+ EX=null;window.scrollTo(0,0);
 }
 
 G.user?showHome():showWelcome();
