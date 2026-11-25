@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1F4D36">
+<title>Rasi Gurukul</title>
+<style>
+:root{
+  --green:#1F4D36; --green-2:#2E6B4C; --leaf:#5E9C6E; --mint:#E4EFE6;
+  --saffron:#E08A1E; --saffron-soft:#FCEBD3; --cream:#FAF6EE; --card:#FFFFFF;
+  --ink:#1E2A23; --muted:#66736B; --line:#E5DFD2; --good:#2E8B57; --bad:#C0453A;
+  --radius:18px; --shadow:0 2px 10px rgba(31,77,54,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--cream);color:var(--ink);font-family:-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif;font-size:16px;line-height:1.5}
+.serif{font-family:Georgia,"Times New Roman",serif}
+.app{max-width:560px;margin:0 auto;min-height:100vh;padding-bottom:40px}
+button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
+input{font:inherit}
+
+/* Login */
+.login{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:28px 24px;background:linear-gradient(170deg,var(--green) 0%,var(--green-2) 55%,var(--cream) 55%)}
+.login .logo{width:64px;height:64px;border-radius:18px;background:var(--saffron);color:#fff;font-weight:700;font-size:30px;display:grid;place-items:center;margin-bottom:16px}
+.login h1{color:#fff;font-size:34px;font-weight:600}
+.login .tag{color:rgba(255,255,255,.85);margin-bottom:28px}
+.login .box{background:var(--card);border-radius:22px;padding:24px 20px;box-shadow:0 10px 30px rgba(31,77,54,.15)}
+.login label{display:block;font-size:13px;font-weight:600;color:var(--muted);margin:0 0 6px}
+.login input{width:100%;padding:14px;border:1.5px solid var(--line);border-radius:12px;margin-bottom:16px;background:var(--cream);outline:none}
+.login input:focus{border-color:var(--green)}
+.login .err{color:var(--bad);font-size:14px;min-height:20px;margin:-6px 0 8px}
+.login .foot{text-align:center;color:var(--muted);font-size:12.5px;margin-top:18px}
+
+/* Hero */
+.hero{background:linear-gradient(160deg,var(--green) 0%,var(--green-2) 100%);color:#fff;padding:20px 20px 24px;border-radius:0 0 28px 28px;position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.06)}
+.hrow{display:flex;justify-content:space-between;align-items:center}
+.brand{display:flex;align-items:center;gap:10px;font-size:13px;letter-spacing:.12em;text-transform:uppercase;opacity:.9}
+.brand .dot{width:28px;height:28px;border-radius:8px;background:var(--saffron);display:grid;place-items:center;font-weight:700;color:#fff;letter-spacing:0}
+.logout{font-size:13px;padding:6px 12px;border-radius:20px;background:rgba(255,255,255,.14);position:relative;z-index:1}
+.hero h1{font-size:28px;margin-top:14px;font-weight:600}
+.hero p{opacity:.85;font-size:14.5px;margin-top:2px}
+.stat-row{display:flex;gap:14px;align-items:center;margin-top:18px;background:rgba(255,255,255,.1);border-radius:16px;padding:14px}
+.ring{width:64px;height:64px;flex:none}
+.ring circle{fill:none;stroke-width:7}
+.ring .bg{stroke:rgba(255,255,255,.18)}
+.ring .fg{stroke:var(--saffron);stroke-linecap:round;transition:stroke-dashoffset .6s}
+.ring text{fill:#fff;font-size:15px;font-weight:700}
+.level-name{font-size:19px;font-weight:600}
+.level-sub{font-size:13px;opacity:.8}
+.levels{display:flex;gap:6px;margin-top:8px}
+.levels span{font-size:11px;padding:3px 8px;border-radius:20px;background:rgba(255,255,255,.12)}
+.levels span.on{background:var(--saffron);color:#fff;font-weight:600}
+
+/* Path */
+.section-title{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:24px 20px 10px}
+.path{padding:0 16px}
+.node{display:flex;gap:14px;align-items:stretch}
+.node .rail{width:44px;flex:none;display:flex;flex-direction:column;align-items:center}
+.node .badge{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:15px;background:var(--card);border:2px solid var(--line);color:var(--muted);z-index:1}
+.node .line{flex:1;width:3px;background:var(--line);margin:2px 0}
+.node:last-child .line{display:none}
+.node.done .badge{background:var(--good);border-color:var(--good);color:#fff}
+.node.done .line{background:var(--good)}
+.node.current .badge{background:var(--saffron);border-color:var(--saffron);color:#fff;box-shadow:0 0 0 6px var(--saffron-soft)}
+.mcard{flex:1;background:var(--card);border-radius:var(--radius);padding:14px 16px;margin-bottom:14px;box-shadow:var(--shadow);text-align:left;border:1px solid transparent;transition:transform .15s}
+.mcard:active{transform:scale(.98)}
+.node.current .mcard{border-color:var(--saffron)}
+.mcard .k{font-size:11.5px;color:var(--saffron);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.mcard h3{font-size:17px;margin:2px 0}
+.mcard p{font-size:13.5px;color:var(--muted)}
+.mcard .meta{display:flex;gap:10px;align-items:center;font-size:12px;color:var(--muted);margin-top:8px}
+.pill{padding:2px 8px;border-radius:20px;background:var(--mint);color:var(--green);font-weight:600;font-size:11.5px}
+.pill.s{background:var(--saffron-soft);color:#9A5A0C}
+.mini{flex:1;height:5px;border-radius:5px;background:var(--line);overflow:hidden;max-width:90px}
+.mini b{display:block;height:100%;background:var(--leaf)}
+
+/* Section screen */
+.topbar{display:flex;align-items:center;gap:10px;padding:14px 16px;position:sticky;top:0;background:var(--cream);z-index:5;border-bottom:1px solid var(--line)}
+.back{width:38px;height:38px;border-radius:12px;background:var(--card);box-shadow:var(--shadow);display:grid;place-items:center;font-size:22px;flex:none}
+.topbar .t{flex:1;min-width:0}
+.topbar .t small{display:block;font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.topbar .t b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.panel{padding:18px 16px}
+.intro{color:var(--muted);margin-bottom:14px;font-size:15px}
+.tlist .titem{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:var(--card);border-radius:16px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow)}
+.titem .ic{width:44px;height:44px;border-radius:12px;background:var(--mint);display:grid;place-items:center;font-size:22px;flex:none}
+.titem .tx{flex:1;min-width:0}
+.titem .tx b{display:block;font-size:15.5px}
+.titem .tx span{font-size:13px;color:var(--muted)}
+.titem .st{font-size:18px;color:var(--line)}
+.titem.read .st{color:var(--good)}
+.group{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--saffron);font-weight:700;margin:16px 2px 8px}
+
+/* Topic */
+.lesson{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.lesson .icon{width:52px;height:52px;border-radius:14px;background:var(--mint);display:grid;place-items:center;font-size:26px;margin-bottom:12px}
+.lesson h2{font-size:22px;margin-bottom:8px;font-weight:600}
+.lesson h4{font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--green);margin:16px 0 6px}
+.lesson p{margin-bottom:10px;color:#2E3A33}
+.lesson ul,.lesson ol{margin:4px 0 10px;list-style:none}
+.lesson li{padding:8px 0 8px 26px;position:relative;border-bottom:1px dashed var(--line);font-size:15px}
+.lesson li:last-child{border-bottom:0}
+.lesson ul li:before{content:"";position:absolute;left:4px;top:15px;width:9px;height:9px;border-radius:50%;background:var(--leaf)}
+.lesson ol{counter-reset:n}
+.lesson ol li{counter-increment:n;padding-left:34px}
+.lesson ol li:before{content:counter(n);position:absolute;left:0;top:8px;width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;font-size:13px;font-weight:700;display:grid;place-items:center}
+.dd{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
+.dd div{border-radius:14px;padding:12px}
+.dd .do{background:#E3F3EA}.dd .dont{background:#FBE9E7}
+.dd b{display:block;margin-bottom:6px;font-size:14px}
+.dd .do b{color:var(--good)}.dd .dont b{color:var(--bad)}
+.dd p{font-size:13.5px;margin:0 0 6px;padding-left:14px;position:relative}
+.dd p:before{position:absolute;left:0;font-weight:700}
+.dd .do p:before{content:"✓";color:var(--good)}.dd .dont p:before{content:"✕";color:var(--bad)}
+.video{border-radius:14px;overflow:hidden;background:#13281D;aspect-ratio:16/9;display:grid;place-items:center;color:#fff;text-align:center;margin:10px 0;position:relative}
+.video iframe,.video video{width:100%;height:100%;border:0;display:block}
+.video .ph .play{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.15);display:grid;place-items:center;font-size:22px;margin:0 auto 8px}
+.video .ph small{opacity:.75;font-size:12.5px}
+.vlabel{font-size:13px;color:var(--muted);margin-top:-4px;margin-bottom:8px}
+.tip{background:var(--saffron-soft);border-radius:14px;padding:12px 14px;font-size:14px;margin:8px 0}
+.todo{background:#FFF8E6;border:1px dashed #E5C27A;border-radius:12px;padding:8px 12px;font-size:13px;color:#8A6A1F;margin-top:10px}
+.draft{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;color:#9A5A0C;background:var(--saffron-soft);padding:2px 8px;border-radius:20px;margin-bottom:8px}
+.value{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px dashed var(--line)}
+.value:last-child{border:0}
+.value .vi{width:40px;height:40px;border-radius:12px;background:var(--saffron-soft);display:grid;place-items:center;font-size:20px;flex:none}
+.cta{display:block;width:100%;margin-top:16px;background:var(--green);color:#fff;padding:15px;border-radius:14px;font-weight:600;font-size:16px;text-align:center}
+.cta.alt{background:var(--card);color:var(--green);border:1.5px solid var(--green)}
+.row2{display:flex;gap:10px}.row2 .cta{flex:1}
+.foot{text-align:center;font-size:12px;color:var(--muted);margin-top:24px;padding:0 20px}
+.foot button{color:var(--muted);text-decoration:underline;font-size:12px}
+.app{padding-bottom:96px}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;justify-content:center;background:rgba(250,246,238,.96);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:8px 10px calc(8px + env(safe-area-inset-bottom))}
+.nav .in{display:flex;gap:6px;width:100%;max-width:560px}
+.nav a,.nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;border-radius:12px;font-size:12px;font-weight:600;color:var(--muted);text-decoration:none}
+.nav .ni{font-size:21px;line-height:1}
+.nav .on{color:var(--green);background:var(--mint)}
+.nav .wa{color:#fff;background:#1FA855}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{background:var(--card);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);text-align:left;display:flex;flex-direction:column;gap:6px;min-height:128px}
+.tile .ti{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:22px;background:var(--mint)}
+.tile b{font-size:15.5px}.tile span{font-size:12.5px;color:var(--muted)}
+.tile.wide{grid-column:1/-1;min-height:auto;flex-direction:row;align-items:center}
+.qlinks{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.qlink{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink)}
+.qlink:last-child{border:0}
+.qlink .qi{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:20px;background:var(--saffron-soft);flex:none}
+.qlink .qt{flex:1}.qlink .qt b{display:block;font-size:15px}.qlink .qt span{font-size:12.5px;color:var(--muted)}
+.qlink .go{font-size:13px;font-weight:700;color:var(--green);background:var(--mint);padding:6px 12px;border-radius:20px}
+.qlink.off{opacity:.55}.qlink.off .go{background:var(--line);color:var(--muted)}
+.search{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:14px;background:var(--card);outline:none;margin-bottom:12px}
+.search:focus{border-color:var(--green)}
+.chips{display:flex;gap:8px;margin-bottom:12px;overflow-x:auto}
+.chip{padding:7px 14px;border-radius:20px;background:var(--card);border:1.5px solid var(--line);font-size:13.5px;font-weight:600;white-space:nowrap}
+.chip.on{background:var(--green);border-color:var(--green);color:#fff}
+.cust{background:var(--card);border-radius:16px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow);display:flex;gap:12px;align-items:center}
+.cust .av{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#fff;background:var(--leaf);flex:none}
+.cust.Distributor .av{background:var(--green)}
+.cust .cx{flex:1;min-width:0}.cust .cx b{display:block;font-size:15.5px}
+.cust .cx span{font-size:13px;color:var(--muted);display:block}
+.cust .cx em{font-style:normal;font-size:11px;font-weight:700;color:#9A5A0C;background:var(--saffron-soft);padding:1px 7px;border-radius:10px}
+.cbtn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:18px;background:var(--mint);text-decoration:none;flex:none}
+.cbtn.w{background:#DDF5E5}
+.empty{text-align:center;color:var(--muted);padding:30px 10px}
+.term{background:var(--card);border-radius:14px;padding:13px 15px;margin-bottom:9px;box-shadow:var(--shadow)}
+.term b{font-size:16px;color:var(--green)}.term .full{font-size:13px;color:#9A5A0C;font-weight:600;margin-left:6px}
+.term p{font-size:14px;color:#2E3A33;margin-top:3px}
+.term .cf{font-size:11px;color:#8A6A1F;background:#FFF8E6;border:1px dashed #E5C27A;border-radius:8px;padding:1px 6px;margin-left:6px}
+.pitchbox{background:var(--card);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);transition:filter .3s}
+.pitchbox.hide .ptext{filter:blur(6px);user-select:none}
+.pstep{display:flex;gap:12px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.pstep:last-child{border:0}
+.pstep .pn{font-size:11px;font-weight:700;letter-spacing:.06em;color:#fff;background:var(--saffron);border-radius:8px;padding:3px 7px;height:fit-content;white-space:nowrap}
+.pstep .ptext{font-size:15px}
+.timer{display:flex;align-items:center;gap:14px;background:var(--green);color:#fff;border-radius:var(--radius);padding:14px 16px;margin-bottom:14px}
+.timer svg{width:70px;height:70px;flex:none}
+.timer circle{fill:none;stroke-width:7}
+.timer .bg{stroke:rgba(255,255,255,.2)}.timer .fg{stroke:var(--saffron);stroke-linecap:round;transition:stroke-dashoffset 1s linear}
+.timer text{fill:#fff;font-size:20px;font-weight:700}
+.timer .tt b{display:block;font-size:16px}.timer .tt span{font-size:13px;opacity:.85}
+.fbar{display:flex;gap:10px;margin-bottom:12px}
+.fbar .search{margin:0;flex:1}
+.addbtn{background:var(--saffron);color:#fff;font-weight:700;border-radius:14px;padding:0 16px;white-space:nowrap}
+.form label{display:block;font-size:13px;font-weight:600;color:var(--muted);margin:12px 0 6px}
+.form label i{font-style:normal;font-weight:400;color:#9AA39D}
+.form input{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--cream);outline:none}
+.form input:focus{border-color:var(--green)}
+.form .ferr{color:var(--bad);font-size:13.5px;min-height:18px;margin-top:8px}
+.ftag{font-style:normal;font-size:11px;font-weight:700;padding:1px 7px;border-radius:10px;background:var(--mint);color:var(--green);margin-right:4px}
+.ftag.p{background:var(--saffron-soft);color:#9A5A0C}
+.cust .edit{font-size:12px;color:var(--muted);text-decoration:underline;margin-top:4px}
+.fcount{font-size:13px;color:var(--muted);margin:2px 2px 10px;display:flex;justify-content:space-between;align-items:center}
+.fcount button{color:var(--green);font-weight:700;font-size:13px}
+.delbtn{display:block;width:100%;margin-top:10px;padding:12px;border-radius:14px;color:var(--bad);font-weight:600;border:1.5px solid #F1C9C4}
+.delbtn.arm{background:var(--bad);color:#fff}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0}
+.stats div{background:var(--mint);border-radius:14px;padding:14px 12px}
+.stats b{display:block;font-size:24px;color:var(--green);font-family:Georgia,serif;line-height:1.1}
+.stats span{font-size:12.5px;color:var(--muted)}
+.crops{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:8px 0}
+.crops div{background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:10px 4px;text-align:center;font-size:12.5px;font-weight:600}
+.crops span{display:block;font-size:24px;margin-bottom:2px}
+.verts>div{display:flex;gap:12px;align-items:center;background:var(--cream);border:1px solid var(--line);border-left:4px solid var(--saffron);border-radius:14px;padding:12px;margin-bottom:10px}
+.verts .vi{width:46px;height:46px;border-radius:12px;background:var(--mint);display:grid;place-items:center;font-size:24px;flex:none}
+.verts small{display:block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--saffron)}
+.verts b{display:block;font-size:16px}.verts span{font-size:13px;color:var(--muted)}
+.welcome{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:32px 26px;background:radial-gradient(circle at 50% 30%,#2E6B4C 0%,var(--green) 70%);color:#fff;overflow:hidden;position:relative}
+.welcome .pot{position:relative;width:150px;height:150px;margin-bottom:10px}
+.welcome .soil{position:absolute;bottom:14px;left:20px;right:20px;height:26px;border-radius:50%;background:#6B4A2B;box-shadow:inset 0 -6px 0 #533820}
+.welcome .sprout{position:absolute;left:50%;bottom:30px;font-size:64px;transform-origin:bottom center;transform:translateX(-50%) scale(0);animation:grow 1.6s cubic-bezier(.3,1.6,.5,1) .3s forwards}
+.welcome .sun{position:absolute;right:0;top:0;font-size:34px;animation:spin 12s linear infinite}
+@keyframes grow{0%{transform:translateX(-50%) scale(0)}100%{transform:translateX(-50%) scale(1)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.welcome h1{font-size:30px;font-weight:600;margin:6px 0 4px}
+.welcome .hi{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--saffron);font-weight:700}
+.welcome .joke{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:16px 18px;margin:18px 0 8px;font-size:16px;line-height:1.55;max-width:400px;min-height:96px;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+.welcome .another{font-size:13px;opacity:.75;text-decoration:underline;margin-bottom:22px}
+.welcome .go{background:var(--saffron);color:#fff;font-weight:700;font-size:17px;padding:16px 34px;border-radius:40px;box-shadow:0 8px 20px rgba(0,0,0,.2);animation:pulse 2s ease-in-out 2s infinite}
+@keyframes pulse{50%{transform:scale(1.05)}}
+.welcome .small{font-size:12px;opacity:.6;margin-top:18px}
+.fall{position:absolute;top:-30px;font-size:20px;opacity:.5;animation:fall linear infinite}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+.fade{animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<nav class="nav" id="nav" style="display:none"></nav>
+
+<script>
+/* =========================================================
+   RASI GURUKUL — SETTINGS
+   USERS: add username / password pairs here.
+   Note: this login only keeps casual visitors out. Anyone
+   who opens the page source can see these passwords.
+   ========================================================= */
+const USERS = [
+  {user:"rasi", pass:"rasi", name:"New Joinee",
+   territory:"",                 // e.g. "Davangere" — shows only that territory's customers
+   manager:"Reporting Manager",  // reporting manager's name
+   managerPhone:""}              // WhatsApp number with country code, e.g. "919876543210"
+];
+
+/* QUICK LINKS — paste the Play Store / web links */
+const LINKS = {
+  rasiMitra:  "",   // Rasi Mitra app download link
+  rasiConnect:"",   // Rasi Connect app download link
+  dashboards: ""    // Rasi Dashboards hub link
+};
+
+/* MEET MY CUSTOMERS — one row per customer.
+   type: "Distributor" or "Retailer". Leave territory empty to show to everyone. */
+const CUSTOMERS = [
+  {name:"Sample Distributor", type:"Distributor", town:"Town name", territory:"", contact:"Owner name", phone:"", note:"Key distributor for the territory"},
+  {name:"Sample Retailer 1",  type:"Retailer",    town:"Town name", territory:"", contact:"Owner name", phone:"", note:""},
+  {name:"Sample Retailer 2",  type:"Retailer",    town:"Village name", territory:"", contact:"Owner name", phone:"", note:""}
+];
+
+/* PITCH PRACTICE — 30-second pitch for each focus product */
+const PITCHES = [
+  {product:"Focus Product 1", crop:"Corn",
+   hook:"Open with the farmer's biggest problem this hybrid solves.",
+   benefit:"Two or three key benefits, such as yield, maturity and tolerance.",
+   proof:"Proof: a trial result, a farmer success story or a demo plot nearby.",
+   ask:"Close with an ask, for example: book now, or visit the demo plot."},
+  {product:"Focus Product 2", crop:"Corn",
+   hook:"Add the hook.", benefit:"Add the key benefits.", proof:"Add the proof.", ask:"Add the ask."}
+];
+
+/* TERMINOLOGY — confirm:true shows a "to confirm" tag */
+const TERMS = [
+  {t:"Rabi", d:"Winter crop season. It is the first season of the financial year."},
+  {t:"Summer / Zaid", d:"Summer crop season. Zaid is counted the same as Summer."},
+  {t:"Kharif", d:"Monsoon crop season, the last season of the financial year."},
+  {t:"FY", full:"Financial Year", d:"Rabi of one year plus Summer and Kharif of the next year. Written as FY YYYY-YY, e.g. FY 2023-24."},
+  {t:"Division › Region › Territory › ESO HQ", d:"Rasi's sales structure, from largest unit to smallest."},
+  {t:"Plan", d:"Sales plan: targets set by season and product."},
+  {t:"Invoice", d:"Billing done to our customers."},
+  {t:"POG", d:"How much of the invoiced stock has moved on in the market.", confirm:true},
+  {t:"Indent", d:"An order request raised for stock to be dispatched."},
+  {t:"DS", d:"A type of dispatch, tracked separately from STO.", confirm:true},
+  {t:"STO", full:"Stock Transfer Order", d:"Stock moved between our own locations, e.g. depot to depot.", confirm:true},
+  {t:"MP / PY / CY", full:"Market Potential / Previous Year / Current Year", d:"Used to compare targets and achievement.", confirm:true},
+  {t:"PD1 / PD2", d:"Stages of product field trials, entered in the Rasi Trial Calendar.", confirm:true},
+  {t:"BH", full:"Business Head", d:"Head of a business unit.", confirm:true},
+  {t:"Rasi Mitra", d:"Rasi's loyalty program for farmers."},
+  {t:"Rasi Connect", d:"Rasi's loyalty program for retailers and distributors."}
+];
+
+/* =========================================================
+   CONTENT
+   Each section has topics. Topic fields:
+   icon, title, sub (one line), body [paragraphs], points [list],
+   steps [numbered list], dos / donts [lists], tip, todo,
+   video {label, url}  -> paste a YouTube or .mp4 link in url
+   draft:true shows a "Draft – please confirm" tag
+   ========================================================= */
+const SECTIONS = [
+ {id:"about", icon:"🏛️", title:"About Rasi Seeds", sub:"Our story, strength and reach",
+  intro:"50+ years of serving Indian farmers. Here's who we are.",
+  topics:[
+   {icon:"🌱", title:"Our Story", sub:"From Attur to all of India",
+    body:["Founded in <b>1973</b> in <b>Attur, Tamil Nadu</b>, by our Chairman <b>Dr. M. Ramasami</b>.",
+          "We started as a regional seed venture and grew into one of India's most trusted research-led seed companies."],
+    tip:"🏆 Rasi is <b>India's largest cotton seed brand</b>."},
+   {icon:"📊", title:"Rasi at a Glance", sub:"Our strength in numbers",
+    stats:[{n:"50+",l:"Years of service"},{n:"4 Mn+",l:"Farmers reached every year"},{n:"6.5 Mn+",l:"Acres sown with Rasi seeds"},
+           {n:"28,000+",l:"Seed producer-farmers"},{n:"45,000+",l:"Acres of seed production"},{n:"250+",l:"Breeders & scientists"}]},
+   {icon:"🔬", title:"Research & Innovation", sub:"Science behind every seed",
+    body:["We breed <b>resilient hybrids</b> that handle pest, disease and climate stress, so farmers face less risk and get higher yields."],
+    points:["Conventional breeding + advanced biotech tools","Multi-location testing stations","Production farms & modern processing plants","NABL-accredited research lab in Attur"]},
+   {icon:"🚜", title:"How We Reach Farmers", sub:"Our network and structure",
+    points:["Nationwide distribution network","Trusted trade partners: distributors & retailers","Farmer programs like <b>Rasi Mitra</b>"],
+    body:["Our sales team works in <b>Division › Region › Territory › ESO HQ</b>. Every target and review follows this structure."]}
+  ]},
+ {id:"products", icon:"🌾", title:"Products", sub:"Cotton · Field Crops · Forage",
+  intro:"Rasi's business runs in three verticals. Know which one each product belongs to.",
+  topics:[
+   {icon:"🧭", title:"Our Three Verticals", sub:"How our products are organised",
+    verticals:[
+     {i:"🌱",t:"Cotton",s:"India's largest cotton seed brand"},
+     {i:"🌽",t:"FC – Field Crops",s:"Maize, paddy, mustard, wheat, millet"},
+     {i:"🐄",t:"Forage",s:"Through Sira Seeds"}]},
+   {icon:"🌱", title:"Cotton", sub:"Our flagship vertical",
+    body:["Rasi is <b>India's largest cotton seed brand</b>."],
+    todo:"Add key cotton hybrids: name, segment, maturity, USP and target geography."},
+   {icon:"🌽", title:"FC – Field Crops", sub:"Maize, paddy, mustard, wheat, millet",
+    crops:[["🌽","Maize"],["🌾","Paddy"],["🌼","Mustard"],["🌾","Wheat"],["🌿","Millet"]],
+    todo:"Confirm the crop list, then add key hybrids for each crop."},
+   {icon:"🐄", title:"Forage (Sira Seeds)", sub:"Fodder crops for livestock",
+    body:["Our forage business is run under the <b>Sira Seeds</b> brand."],
+    todo:"Add the key forage products and the farmers they serve."}
+  ]},
+ {id:"ecosystem", icon:"🤝", title:"Rasi Ecosystem", sub:"Our apps for farmers and channel partners",
+  intro:"Rasi runs loyalty programmes for farmers and for channel partners. Learn how each one works, so you can help stakeholders sign up and use the apps.",
+  topics:[
+   {group:"Rasi Mitra", icon:"👨‍🌾", title:"Rasi Mitra: Farmer Loyalty Program", sub:"Overview and app walkthrough",
+    body:["<b>Rasi Mitra</b> is our loyalty program for farmers. It rewards farmers who choose Rasi seeds and keeps them connected with us."],
+    todo:"Add how farmers enrol, what they earn and how they redeem rewards.",
+    video:{label:"Rasi Mitra app walkthrough", url:""}},
+   {group:"Rasi Connect", icon:"🏪", title:"Rasi Connect: Objective", sub:"Why the program exists",
+    body:["<b>Rasi Connect</b> is our loyalty program for retailers and distributors. It recognises and rewards our channel partners for doing business with Rasi."],
+    todo:"Add the official objective of the program."},
+   {group:"Rasi Connect", icon:"⭐", title:"Rasi Connect: Point Scheme", sub:"How partners earn and redeem points",
+    points:["How points are earned","Point value per product or pack","How and when points can be redeemed","Validity of points"],
+    todo:"Add the point scheme details for the current season."},
+   {group:"Rasi Connect", icon:"✅", title:"Rasi Connect: Do's & Don'ts", sub:"Rules every team member must follow",
+    dos:["Add the first Do"],donts:["Add the first Don't"],
+    todo:"Replace these with the official Do's and Don'ts."},
+   {group:"Rasi Connect", icon:"▶️", title:"Rasi Connect: App Walkthrough", sub:"See the app step by step",
+    video:{label:"Rasi Connect app walkthrough", url:""}}
+  ]},
+ {id:"policy", icon:"📋", title:"Policies", sub:"Travel, safety and attendance",
+  intro:"Company policies that apply to you from day one.",
+  topics:[
+   {icon:"🛵", title:"Travel Policy & Safety", sub:"Travel rules, claims and staying safe",
+    body:["Field work involves a lot of travel. Follow the travel policy for claims, and put your safety first."],
+    draft:true,
+    points:["Always wear a helmet on two-wheelers and a seat belt in cars","Avoid riding or driving at night wherever possible","Share your travel plan with your manager","Keep emergency contacts saved on your phone"],
+    todo:"Add the official travel policy: eligibility, modes of travel, allowances and how to submit claims."},
+   {icon:"🕘", title:"Attendance Policy", sub:"Working hours, leave and marking attendance",
+    todo:"Add working days and hours, how attendance is marked, and the leave types and how to apply."}
+  ]},
+ {id:"faq", icon:"❓", title:"FAQs", sub:"Common questions from new joinees",
+  intro:"Quick answers to questions you will have in your first weeks.",
+  topics:[
+   {icon:"🏪", title:"Which retailers does Rasi serve?", sub:"How to find them",
+    todo:"Add the steps to find the list of retailers served by Rasi.",
+    video:{label:"Demo: finding retailers served by Rasi", url:""}},
+   {icon:"🚚", title:"Which distributors does Rasi serve?", sub:"How to find them",
+    todo:"Add the steps to find the list of distributors served by Rasi.",
+    video:{label:"Demo: finding distributors served by Rasi", url:""}},
+   {icon:"🛠️", title:"How do I handle a farmer's complaint?", sub:"Steps to address and resolve it",
+    draft:true,
+    steps:["<b>Listen</b> to the farmer calmly and note the complaint","<b>Record</b> the details: farmer's name, village, phone, hybrid, lot number and sowing date","<b>Visit the field</b> and take photos of the crop","<b>Escalate</b> to your manager or the product team with the details","<b>Follow up</b> and let the farmer know the outcome"],
+    tip:"💡 Never make promises on compensation in the field. Follow the official process.",
+    todo:"Confirm the official complaint process, the escalation contacts and the timelines."}
+  ]},
+ {id:"values", icon:"💎", title:"Our Values", sub:"Farmer First · Ethics · Innovation · Excellence · Trust", valuesPage:true,
+  intro:"Our values guide how we work with farmers, partners and each other.",
+  topics:[
+   {icon:"💎", title:"The Rasi Values", sub:"Five values that guide us",
+    values:[
+     {i:"👨‍🌾",t:"Farmer First",d:"Every decision at Rasi is evaluated through the lens of farmer prosperity."},
+     {i:"⚖️",t:"Ethical Governance",d:"Rasi is built on transparent practices, fair pricing and responsible leadership."},
+     {i:"💡",t:"Innovation Led",d:"Innovation at Rasi is practical, research-driven and field-proven."},
+     {i:"🏅",t:"Nurturing Excellence",d:"We believe excellence grows when knowledge is shared and capabilities are strengthened."},
+     {i:"🤝",t:"Reliability & Trust",d:"Trust is earned through performance. Reliability is our strongest brand asset."}]}
+  ]}
+];
+
+const LEVELS = [
+ {name:"Shishya", min:0, sub:"The learner. Your journey begins."},
+ {name:"Sadhak",  min:3, sub:"The practitioner. Keep going."},
+ {name:"Acharya", min:SECTIONS.length, sub:"The master. You know the Rasi way."}
+];
+
+/* ================= STATE ================= */
+const KEY="rasi_gurukul_v2";
+let memStore={};
+function loadState(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return memStore}}
+function saveState(){memStore=G;try{localStorage.setItem(KEY,JSON.stringify(G))}catch(e){}}
+let G=Object.assign({read:{},user:null},loadState());
+
+const appEl=document.getElementById("app");
+const tKey=(s,i)=>s.id+":"+i;
+const secRead=s=>s.topics.filter((_,i)=>G.read[tKey(s,i)]).length;
+const secDone=s=>secRead(s)===s.topics.length;
+const doneCount=()=>SECTIONS.filter(secDone).length;
+const curLevel=()=>{let l=LEVELS[0];LEVELS.forEach(x=>{if(doneCount()>=x.min)l=x});return l};
+const nextIdx=()=>{const i=SECTIONS.findIndex(s=>!secDone(s));return i<0?SECTIONS.length:i};
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ================= WELCOME ================= */
+const JOKES=[
+ "Congratulations! You've just been <b>planted</b> 🌱<br>Don't worry, we'll water you with knowledge.",
+ "Our hybrids take about 100 days to grow.<br>You? Just <b>6 Adhyays</b>. No fertiliser needed. 😄",
+ "Warning: side effects include knowing <b>Rabi from Kharif</b> in your sleep. 😴",
+ "28,000+ farmers grow our seeds.<br>Your hardest job today? <b>Tapping one button.</b> 👇",
+ "Every great hybrid starts as a small seed.<br>So does every great Rasi colleague. 🌽",
+ "No stress, no pests. 🐛<br>Just good seeds and good people."
+];
+let jokeI=-1;
+function nextJoke(){let n;do{n=Math.floor(Math.random()*JOKES.length)}while(n===jokeI&&JOKES.length>1);jokeI=n;
+ const j=document.getElementById("joke");if(!j)return;j.style.opacity=0;setTimeout(()=>{j.innerHTML=JOKES[n];j.style.opacity=1},200)}
+function showWelcome(){
+ setNav(null);
+ const falling=["🌽","🌾","🌱","🍃","🌼"].flatMap((e,k)=>[0,1].map(r=>`<span class="fall" style="left:${(k*20+r*9+4)%96}%;animation-duration:${7+((k+r)%4)*2}s;animation-delay:${(k*1.3+r*2.7)%6}s">${e}</span>`)).join("");
+ appEl.innerHTML=`<div class="welcome fade">${falling}
+  <div class="pot"><span class="sun">☀️</span><div class="soil"></div><div class="sprout">🌱</div></div>
+  <div class="hi">Namaste & Welcome</div>
+  <h1 class="serif">Rasi Gurukul</h1>
+  <div style="opacity:.85;font-size:14.5px">Where new joinees grow into Rasi champions</div>
+  <div class="joke" id="joke"></div>
+  <button class="another" onclick="nextJoke()">😂 Tell me another one</button>
+  <button class="go" onclick="showLogin()">Let's Grow! 🚀</button>
+  <div class="small">Est. 1973 · Attur, Tamil Nadu</div>
+ </div>`;
+ nextJoke();
+}
+
+/* ================= LOGIN ================= */
+function showLogin(){setNav(null);
+ appEl.innerHTML=`<div class="login fade">
+  <div class="logo">R</div>
+  <h1 class="serif">Rasi Gurukul</h1>
+  <div class="tag">Learn the Rasi way: systems, processes and people.</div>
+  <div class="box">
+   <label for="u">Username</label><input id="u" autocomplete="username" autocapitalize="none">
+   <label for="p">Password</label><input id="p" type="password" autocomplete="current-password">
+   <div class="err" id="err"></div>
+   <button class="cta" type="button" style="margin-top:4px" onclick="doLogin()">Sign in</button>
+   <div class="foot">Don't have login details? Contact your reporting manager.</div>
+  </div></div>`;
+ document.querySelectorAll(".login input").forEach(i=>i.addEventListener("keydown",ev=>{if(ev.key==="Enter")doLogin()}));
+}
+function doLogin(){
+ const u=document.getElementById("u").value.trim().toLowerCase(),p=document.getElementById("p").value;
+ const hit=USERS.find(x=>x.user.toLowerCase()===u&&x.pass===p);
+ if(!hit){document.getElementById("err").textContent="Incorrect username or password.";return}
+ G.user=hit.name||hit.user;G.uid=hit.user;saveState();showHome();
+}
+function doLogout(){G.user=null;G.uid=null;saveState();showLogin()}
+
+/* ================= HOME ================= */
+function showHome(){setNav("home");
+ const n=doneCount(),tot=SECTIONS.length,pct=Math.round(n/tot*100);
+ const C=2*Math.PI*26,off=C*(1-n/tot),lv=curLevel(),cur=nextIdx();
+ appEl.innerHTML=`<div class="fade">
+  <div class="hero">
+   <div class="hrow"><div class="brand"><div class="dot">R</div>Rasi Seeds</div><button class="logout" onclick="doLogout()">Log out</button></div>
+   <h1 class="serif">Namaste, ${esc(G.user)}</h1>
+   <p>Welcome to Rasi Gurukul, your guide to how we work.</p>
+   <div class="stat-row">
+    <svg class="ring" viewBox="0 0 64 64"><circle class="bg" cx="32" cy="32" r="26"/>
+     <circle class="fg" cx="32" cy="32" r="26" stroke-dasharray="${C}" stroke-dashoffset="${off}" transform="rotate(-90 32 32)"/>
+     <text x="32" y="37" text-anchor="middle">${pct}%</text></svg>
+    <div><div class="level-name serif">${lv.name}</div>
+     <div class="level-sub">${n} of ${tot} sections complete · ${lv.sub}</div>
+     <div class="levels">${LEVELS.map(x=>`<span class="${x===lv?'on':''}">${x.name}</span>`).join("")}</div></div>
+   </div>
+  </div>
+  <div class="section-title">Your Journey</div>
+  <div class="path">
+   ${SECTIONS.map((s,i)=>{
+     const r=secRead(s),t=s.topics.length,st=secDone(s)?"done":i===cur?"current":"";
+     const tag=secDone(s)?`<span class="pill">✓ Done</span>`:i===cur?`<span class="pill s">Up next</span>`:"";
+     return `<div class="node ${st}">
+      <div class="rail"><div class="badge">${secDone(s)?"✓":i+1}</div><div class="line"></div></div>
+      <button class="mcard" onclick="showSection(${i})">
+       <div class="k">Adhyay ${i+1}</div><h3>${s.icon} ${s.title}</h3><p>${s.sub}</p>
+       <div class="meta"><span>${r}/${t} read</span><div class="mini"><b style="width:${r/t*100}%"></b></div>${tag}</div>
+      </button></div>`}).join("")}
+  </div>
+  <div class="foot">Rasi Gurukul · Learn · Practise · Grow<br><button onclick="resetAll()">Reset progress</button></div>
+ </div>`;
+ window.scrollTo(0,0);
+}
+
+/* ================= SECTION ================= */
+let SI=0;
+function bar(label,title,backFn){return `<div class="topbar"><button class="back" onclick="${backFn}">‹</button><div class="t"><small>${label}</small><b>${title}</b></div></div>`}
+function showSection(i){setNav("home");
+ SI=i;const s=SECTIONS[i];let lastG=null;
+ appEl.innerHTML=`${bar(`Adhyay ${i+1} · ${secRead(s)} of ${s.topics.length} read`,`${s.icon} ${s.title}`,"showHome()")}
+ <div class="panel fade"><p class="intro">${s.intro||""}</p><div class="tlist">
+  ${s.topics.map((t,k)=>{
+    const g=t.group&&t.group!==lastG?`<div class="group">${t.group}</div>`:"";lastG=t.group||lastG;
+    return `${g}<button class="titem ${G.read[tKey(s,k)]?'read':''}" onclick="showTopic(${k})">
+     <div class="ic">${t.icon}</div><div class="tx"><b>${t.title}</b><span>${t.sub||""}${t.video?" · 🎬 Video":""}</span></div>
+     <div class="st">${G.read[tKey(s,k)]?"✓":"›"}</div></button>`}).join("")}
+ </div><button class="cta alt" onclick="showHome()">Back to journey</button></div>`;
+ window.scrollTo(0,0);
+}
+
+/* ================= TOPIC ================= */
+function videoHTML(v){
+ let inner;
+ if(v.url){
+  const yt=v.url.match(/(?:youtu\.be\/|v=|shorts\/|embed\/)([\w-]{11})/);
+  inner=yt?`<iframe src="https://www.youtube.com/embed/${yt[1]}" allowfullscreen></iframe>`:`<video src="${esc(v.url)}" controls playsinline></video>`;
+ } else inner=`<div class="ph"><div class="play">▶</div>Video coming soon<br><small>${esc(v.label)}</small></div>`;
+ return `<div class="video">${inner}</div><div class="vlabel">🎬 ${esc(v.label)}</div>`;
+}
+function showTopic(k){setNav("home");
+ const s=SECTIONS[SI],t=s.topics[k],n=s.topics.length;
+ G.read[tKey(s,k)]=true;saveState();
+ appEl.innerHTML=`${bar(`${s.title} · ${k+1} of ${n}`,t.title,`showSection(${SI})`)}
+ <div class="panel fade"><div class="lesson">
+  <div class="icon">${t.icon}</div>
+  ${t.draft?`<div class="draft">DRAFT · PLEASE CONFIRM</div>`:""}
+  <h2 class="serif">${t.title}</h2>
+  ${(t.body||[]).map(p=>`<p>${p}</p>`).join("")}
+  ${t.video?videoHTML(t.video):""}
+  ${t.stats?`<div class="stats">${t.stats.map(x=>`<div><b>${x.n}</b><span>${x.l}</span></div>`).join("")}</div>`:""}
+  ${t.verticals?`<div class="verts">${t.verticals.map((v,n)=>`<div><span class="vi">${v.i}</span><div><small>Vertical ${n+1}</small><b>${v.t}</b><span>${v.s}</span></div></div>`).join("")}</div>`:""}
+  ${t.crops?`<div class="crops">${t.crops.map(([i,c])=>`<div><span>${i}</span>${c}</div>`).join("")}</div>`:""}
+  ${t.points?`<ul>${t.points.map(p=>`<li>${p}</li>`).join("")}</ul>`:""}
+  ${t.steps?`<ol>${t.steps.map(p=>`<li>${p}</li>`).join("")}</ol>`:""}
+  ${t.dos||t.donts?`<div class="dd"><div class="do"><b>Do's</b>${(t.dos||[]).map(x=>`<p>${x}</p>`).join("")}</div><div class="dont"><b>Don'ts</b>${(t.donts||[]).map(x=>`<p>${x}</p>`).join("")}</div></div>`:""}
+  ${t.values?t.values.map(v=>`<div class="value"><div class="vi">${v.i}</div><div><b>${v.t}</b><br><span style="color:var(--muted);font-size:14px">${v.d}</span></div></div>`).join(""):""}
+  ${t.tip?`<div class="tip">${t.tip}</div>`:""}
+  ${t.todo?`<div class="todo">✏️ Content to add: ${t.todo}</div>`:""}
+ </div>
+ <div class="row2">
+  ${k>0?`<button class="cta alt" onclick="showTopic(${k-1})">Previous</button>`:""}
+  ${k<n-1?`<button class="cta" onclick="showTopic(${k+1})">Next</button>`:`<button class="cta" onclick="finishSection()">Finish section</button>`}
+ </div></div>`;
+ window.scrollTo(0,0);
+}
+function finishSection(){
+ const s=SECTIONS[SI];
+ if(!secDone(s))return showSection(SI);
+ const lv=curLevel(),last=doneCount()===SECTIONS.length;
+ appEl.innerHTML=`${bar("Complete",`${s.icon} ${s.title}`,"showHome()")}
+ <div class="panel fade" style="text-align:center;padding-top:40px">
+  <div style="font-size:64px">${last?"🏆":"🌟"}</div>
+  <h2 class="serif" style="font-size:26px;margin:10px 0 6px">${last?`You are now an ${lv.name}!`:"Adhyay complete!"}</h2>
+  <p style="color:var(--muted)">${last?"You've completed the whole Rasi Gurukul journey. Welcome aboard.":`Level: ${lv.name}. On to the next section.`}</p>
+  ${!last&&nextIdx()<SECTIONS.length?`<button class="cta" onclick="showSection(${nextIdx()})">Next: ${SECTIONS[nextIdx()].title}</button>`:""}
+  <button class="cta alt" onclick="showHome()">Back to journey</button>
+ </div>`;
+ window.scrollTo(0,0);
+}
+function resetAll(){if(confirm("Reset learning progress on this device? Farmer contacts are kept.")){G.read={};saveState();showHome()}}
+
+/* ================= NAV & TOOLKIT ================= */
+let timerId=null;
+const me=()=>USERS.find(u=>u.user===G.uid)||USERS[0];
+function waLink(){const m=me();if(!m.managerPhone)return "";
+ return "https://wa.me/"+m.managerPhone.replace(/\D/g,"")+"?text="+encodeURIComponent(`Hi ${m.manager}, this is ${G.user}. I have a question from Rasi Gurukul: `)}
+function setNav(active){
+ if(timerId){clearInterval(timerId);timerId=null}
+ const nav=document.getElementById("nav");
+ if(!active){nav.style.display="none";return}
+ const wa=waLink();
+ nav.style.display="flex";
+ nav.innerHTML=`<div class="in">
+  <button class="${active==="home"?"on":""}" onclick="showHome()"><span class="ni">🏠</span>Journey</button>
+  <button class="${active==="kit"?"on":""}" onclick="showToolkit()"><span class="ni">🧰</span>Toolkit</button>
+  ${wa?`<a class="wa" href="${wa}" target="_blank" rel="noopener"><span class="ni">💬</span>Ask Manager</a>`
+      :`<button class="${active==="ask"?"on":""}" onclick="showAskMissing()"><span class="ni">💬</span>Ask Manager</button>`}
+ </div>`;
+}
+function showAskMissing(){
+ setNav("ask");
+ appEl.innerHTML=`${bar("Ask a question","💬 Ask Manager","showHome()")}
+ <div class="panel fade"><div class="lesson"><div class="icon">💬</div>
+  <h2 class="serif">Ask your manager</h2>
+  <p>This button opens WhatsApp with a message to your reporting manager, ready for you to type your question.</p>
+  <div class="todo">✏️ Setup: add the manager's WhatsApp number in <b>managerPhone</b> for this user in the USERS list.</div>
+ </div></div>`;
+}
+const myCustomers=()=>{const t=(me().territory||"").toLowerCase();return CUSTOMERS.filter(c=>!t||!c.territory||c.territory.toLowerCase()===t)};
+function linkRow(icon,title,sub,url,label){
+ return url?`<a class="qlink" href="${esc(url)}" target="_blank" rel="noopener"><div class="qi">${icon}</div><div class="qt"><b>${title}</b><span>${sub}</span></div><span class="go">${label}</span></a>`
+  :`<div class="qlink off"><div class="qi">${icon}</div><div class="qt"><b>${title}</b><span>Link coming soon</span></div><span class="go">${label}</span></div>`}
+function showToolkit(){
+ setNav("kit");
+ appEl.innerHTML=`<div class="fade">
+  <div class="topbar"><div class="t"><small>Your field kit</small><b>🧰 Toolkit</b></div></div>
+  <div class="panel">
+   <div class="tiles">
+    <button class="tile" onclick="showCustomers()"><div class="ti">🤝</div><b>Meet My Customers</b><span>${myCustomers().length} customers</span></button>
+    <button class="tile" onclick="showPitchList()"><div class="ti">🎤</div><b>Pitch Practice</b><span>30-sec pitch · ${PITCHES.length} focus products</span></button>
+    <button class="tile wide" onclick="showFarmers()"><div class="ti" style="background:var(--saffron-soft)">📇</div><div><b>Farmer Dialer</b><br><span>${myFarmers().length} farmer contacts saved · Tap to call</span></div></button>
+    <button class="tile wide" onclick="showTerms()"><div class="ti">📖</div><div><b>Terminology to Know</b><br><span>${TERMS.length} words you'll hear every day</span></div></button>
+   </div>
+   <div class="section-title" style="margin:22px 2px 10px">Quick links</div>
+   <div class="qlinks">
+    ${linkRow("👨‍🌾","Rasi Mitra","Farmer loyalty app",LINKS.rasiMitra,"Download")}
+    ${linkRow("🏪","Rasi Connect","Retailer & distributor loyalty app",LINKS.rasiConnect,"Download")}
+    ${linkRow("📊","Rasi Dashboards","All dashboards in one place",LINKS.dashboards,"Open")}
+   </div>
+  </div></div>`;
+ window.scrollTo(0,0);
+}
+
+/* ---- Customers ---- */
+let custType="All";
+function showCustomers(){
+ setNav("kit");custType="All";
+ appEl.innerHTML=`${bar(me().territory?`Territory · ${esc(me().territory)}`:"Your customers","🤝 Meet My Customers","showToolkit()")}
+ <div class="panel fade">
+  <input class="search" id="cq" placeholder="Search name or town" oninput="drawCustomers()">
+  <div class="chips">${["All","Distributor","Retailer"].map(t=>`<button class="chip ${t==="All"?"on":""}" onclick="custType='${t}';document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c.textContent==='${t}'));drawCustomers()">${t}</button>`).join("")}</div>
+  <div id="clist"></div>
+ </div>`;
+ drawCustomers();window.scrollTo(0,0);
+}
+function drawCustomers(){
+ const q=(document.getElementById("cq").value||"").toLowerCase();
+ const list=myCustomers().filter(c=>(custType==="All"||c.type===custType)&&(c.name+" "+c.town+" "+(c.contact||"")).toLowerCase().includes(q));
+ document.getElementById("clist").innerHTML=list.length?list.map(c=>{
+  const ph=(c.phone||"").replace(/\D/g,"");
+  return `<div class="cust ${c.type}"><div class="av">${esc(c.name.trim()[0]||"?")}</div>
+   <div class="cx"><b>${esc(c.name)}</b><span>${esc(c.contact||"")}${c.contact?" · ":""}${esc(c.town||"")}</span>
+   <span style="margin-top:3px"><em>${esc(c.type)}</em>${c.note?` <span style="display:inline;font-size:12.5px">${esc(c.note)}</span>`:""}</span></div>
+   ${ph?`<a class="cbtn" href="tel:${ph}">📞</a><a class="cbtn w" href="https://wa.me/${ph.length===10?"91"+ph:ph}" target="_blank" rel="noopener">💬</a>`:""}
+  </div>`}).join(""):`<div class="empty">No customers found.</div>`;
+}
+
+/* ---- Pitch practice ---- */
+function showPitchList(){
+ setNav("kit");
+ appEl.innerHTML=`${bar("Focus products","🎤 Pitch Practice","showToolkit()")}
+ <div class="panel fade"><p class="intro">Pick a product, read the pitch, then hide the script and say it aloud in 30 seconds.</p>
+  <div class="tlist">${PITCHES.map((x,i)=>`<button class="titem ${G.read["pitch:"+i]?"read":""}" onclick="showPitch(${i})"><div class="ic">🌽</div><div class="tx"><b>${esc(x.product)}</b><span>${esc(x.crop||"")}</span></div><div class="st">${G.read["pitch:"+i]?"✓":"›"}</div></button>`).join("")}</div>
+ </div>`;
+ window.scrollTo(0,0);
+}
+function showPitch(i){
+ setNav("kit");const x=PITCHES[i];
+ const C=2*Math.PI*28;
+ appEl.innerHTML=`${bar("30-second pitch",`🎤 ${esc(x.product)}`,"showPitchList()")}
+ <div class="panel fade">
+  <div class="timer"><svg viewBox="0 0 70 70"><circle class="bg" cx="35" cy="35" r="28"/><circle class="fg" id="tfg" cx="35" cy="35" r="28" stroke-dasharray="${C}" stroke-dashoffset="0" transform="rotate(-90 35 35)"/><text id="tnum" x="35" y="42" text-anchor="middle">30</text></svg>
+   <div class="tt"><b id="tmsg">Ready when you are</b><span>Hook → Benefit → Proof → Ask</span></div></div>
+  <div class="pitchbox" id="pbox">
+   ${[["HOOK",x.hook],["BENEFIT",x.benefit],["PROOF",x.proof],["ASK",x.ask]].map(([k,v])=>`<div class="pstep"><span class="pn">${k}</span><div class="ptext">${esc(v||"")}</div></div>`).join("")}
+  </div>
+  <div class="row2">
+   <button class="cta alt" id="hbtn" onclick="toggleScript()">Hide script</button>
+   <button class="cta" id="sbtn" onclick="startPitch(${i})">Start 30 sec</button>
+  </div>
+ </div>`;
+ window.scrollTo(0,0);
+}
+function toggleScript(){const b=document.getElementById("pbox");b.classList.toggle("hide");document.getElementById("hbtn").textContent=b.classList.contains("hide")?"Show script":"Hide script"}
+function startPitch(i){
+ if(timerId)clearInterval(timerId);
+ const C=2*Math.PI*28,fg=document.getElementById("tfg"),num=document.getElementById("tnum"),msg=document.getElementById("tmsg"),sb=document.getElementById("sbtn");
+ let left=30;num.textContent=left;fg.style.strokeDashoffset=0;msg.textContent="Go! Say your pitch aloud";sb.textContent="Restart";
+ timerId=setInterval(()=>{left--;num.textContent=left;fg.style.strokeDashoffset=C*(1-left/30);
+  if(left===10)msg.textContent="10 seconds left. Time for the ask!";
+  if(left<=0){clearInterval(timerId);timerId=null;msg.textContent="Time's up! Well done 👏";sb.textContent="Try again";G.read["pitch:"+i]=true;saveState()}
+ },1000);
+}
+
+/* ---- Terminology ---- */
+function showTerms(){
+ setNav("kit");
+ appEl.innerHTML=`${bar(`${TERMS.length} terms`,"📖 Terminology to Know","showToolkit()")}
+ <div class="panel fade"><input class="search" id="tq" placeholder="Search a term" oninput="drawTerms()"><div id="tlist"></div></div>`;
+ drawTerms();window.scrollTo(0,0);
+}
+function drawTerms(){
+ const q=(document.getElementById("tq").value||"").toLowerCase();
+ const list=TERMS.filter(x=>(x.t+" "+(x.full||"")+" "+x.d).toLowerCase().includes(q));
+ document.getElementById("tlist").innerHTML=list.length?list.map(x=>`<div class="term"><b>${x.t}</b>${x.full?`<span class="full">${x.full}</span>`:""}${x.confirm?`<span class="cf">to confirm</span>`:""}<p>${x.d}</p></div>`).join(""):`<div class="empty">No matching term.</div>`;
+}
+
+/* ================= FARMER DIALER ================= */
+const CROPS=["Corn","Cotton","Paddy","Millets","Vegetables"];
+if(!G.farmers)G.farmers=[];
+const myFarmers=()=>G.farmers.filter(f=>f.by===(G.uid||USERS[0].user));
+const cleanMob=v=>{let d=String(v).replace(/\D/g,"");if(d.length===12&&d.startsWith("91"))d=d.slice(2);if(d.length===11&&d.startsWith("0"))d=d.slice(1);return d};
+let fVillage="All";
+function showFarmers(){
+ setNav("kit");
+ const vill=[...new Set(myFarmers().map(f=>f.village).filter(Boolean))].sort();
+ if(fVillage!=="All"&&!vill.includes(fVillage))fVillage="All";
+ appEl.innerHTML=`${bar("Future business prospects","📇 Farmer Dialer","showToolkit()")}
+ <div class="panel fade">
+  <div class="fbar"><input class="search" id="fq" placeholder="Search name, number, crop" oninput="drawFarmers()"><button class="addbtn" onclick="showFarmerForm(-1)">+ Add</button></div>
+  ${vill.length?`<div class="chips">${["All",...vill].map(v=>`<button class="chip ${v===fVillage?"on":""}" data-v="${esc(v)}" onclick="fVillage=this.dataset.v;document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c===this));drawFarmers()">${v==="All"?"All villages":"📍 "+esc(v)}</button>`).join("")}</div>`:""}
+  <div id="flist"></div>
+ </div>`;
+ drawFarmers();window.scrollTo(0,0);
+}
+function drawFarmers(){
+ const q=(document.getElementById("fq").value||"").toLowerCase();
+ const all=myFarmers().map(f=>({f,i:G.farmers.indexOf(f)})).sort((a,b)=>a.f.name.localeCompare(b.f.name));
+ const list=all.filter(({f})=>(fVillage==="All"||f.village===fVillage)&&[f.name,f.mobile,f.crop,f.product,f.village].join(" ").toLowerCase().includes(q));
+ const el=document.getElementById("flist");
+ if(!all.length){el.innerHTML=`<div class="empty">📇<br><b>No farmers saved yet</b><br>Tap <b>+ Add</b> to save your first farmer contact.</div>`;return}
+ el.innerHTML=`<div class="fcount"><span>${list.length} of ${all.length} farmers</span><button onclick="exportFarmers()">⬇ Export CSV</button></div>`+
+ (list.length?list.map(({f,i})=>`<div class="cust"><div class="av" style="background:var(--saffron)">${esc(f.name.trim()[0]||"?").toUpperCase()}</div>
+   <div class="cx"><b>${esc(f.name)}</b><span>${f.mobile.replace(/(\d{5})(\d{5})/,"$1 $2")}${f.village?" · 📍 "+esc(f.village):""}</span>
+   ${f.crop||f.product?`<span style="margin-top:3px">${f.crop?`<em class="ftag">${esc(f.crop)}</em>`:""}${f.product?`<em class="ftag p">${esc(f.product)}</em>`:""}</span>`:""}
+   <button class="edit" onclick="showFarmerForm(${i})">Edit</button></div>
+   <a class="cbtn" href="tel:+91${f.mobile}">📞</a><a class="cbtn w" href="https://wa.me/91${f.mobile}" target="_blank" rel="noopener">💬</a>
+  </div>`).join(""):`<div class="empty">No farmer matches your search.</div>`);
+}
+function showFarmerForm(i){
+ setNav("kit");const f=i>=0?G.farmers[i]:{name:"",mobile:"",crop:"",product:"",village:""};
+ const vill=[...new Set(myFarmers().map(x=>x.village).filter(Boolean))];
+ appEl.innerHTML=`${bar(i>=0?"Edit contact":"New contact",i>=0?"✏️ Edit Farmer":"➕ Add Farmer","showFarmers()")}
+ <div class="panel fade"><div class="lesson form">
+  <label for="fn">Farmer name *</label><input id="fn" value="${esc(f.name)}" placeholder="e.g. Ramesh Patil" autocomplete="off">
+  <label for="fm">Mobile number *</label><input id="fm" value="${esc(f.mobile)}" inputmode="numeric" maxlength="14" placeholder="10-digit mobile number" autocomplete="off">
+  <label for="fv">Village <i>(label)</i></label><input id="fv" value="${esc(f.village)}" list="dlv" placeholder="e.g. Harihar" autocomplete="off">
+  <label for="fc">Crop <i>(optional)</i></label><input id="fc" value="${esc(f.crop)}" list="dlc" placeholder="e.g. Corn" autocomplete="off">
+  <label for="fp">Product <i>(optional)</i></label><input id="fp" value="${esc(f.product)}" list="dlp" placeholder="Product the farmer uses or is interested in" autocomplete="off">
+  <datalist id="dlv">${vill.map(v=>`<option value="${esc(v)}">`).join("")}</datalist>
+  <datalist id="dlc">${CROPS.map(v=>`<option value="${v}">`).join("")}</datalist>
+  <datalist id="dlp">${PITCHES.map(v=>`<option value="${esc(v.product)}">`).join("")}</datalist>
+  <div class="ferr" id="ferr"></div>
+  <button class="cta" type="button" onclick="saveFarmer(${i})">${i>=0?"Save changes":"Save farmer"}</button>
+  ${i>=0?`<button class="delbtn" id="delb" type="button" onclick="delFarmer(${i})">Delete contact</button>`:""}
+ </div></div>`;
+ window.scrollTo(0,0);
+}
+function saveFarmer(i){
+ const v=id=>document.getElementById(id).value.trim();
+ const name=v("fn"),mobile=cleanMob(v("fm")),err=document.getElementById("ferr");
+ if(!name){err.textContent="Please enter the farmer's name.";return}
+ if(!/^[6-9]\d{9}$/.test(mobile)){err.textContent="Please enter a valid 10-digit mobile number.";return}
+ const dup=myFarmers().find(x=>x.mobile===mobile&&G.farmers.indexOf(x)!==i);
+ if(dup){err.textContent=`This number is already saved for ${dup.name}.`;return}
+ const rec={name,mobile,village:v("fv"),crop:v("fc"),product:v("fp"),by:G.uid||USERS[0].user,
+  added:i>=0?G.farmers[i].added:new Date().toISOString().slice(0,10)};
+ if(i>=0)G.farmers[i]=rec;else G.farmers.push(rec);
+ saveState();showFarmers();
+}
+function delFarmer(i){
+ const b=document.getElementById("delb");
+ if(!b.classList.contains("arm")){b.classList.add("arm");b.textContent="Tap again to delete";return}
+ G.farmers.splice(i,1);saveState();showFarmers();
+}
+function exportFarmers(){
+ const rows=[["Farmer Name","Mobile","Village","Crop","Product","Added On","Saved By"],...myFarmers().map(f=>[f.name,f.mobile,f.village,f.crop,f.product,f.added,G.user])];
+ const csv=rows.map(r=>r.map(c=>`"${String(c||"").replace(/"/g,'""')}"`).join(",")).join("\n");
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["﻿"+csv],{type:"text/csv"}));
+ a.download=`Farmer_Contacts_${new Date().toISOString().slice(0,10)}.csv`;document.body.appendChild(a);a.click();a.remove();
+}
+
+G.user?showHome():showWelcome();
+</script>
+</body>
+</html>
